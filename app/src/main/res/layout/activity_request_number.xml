@@ -8,7 +8,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView2"
-        android:layout_width="409dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
@@ -24,7 +24,7 @@
             android:layout_gravity="center"
             android:fontFamily="sans-serif-black"
             android:gravity="center"
-            android:text="Thank you for your request. We Will Call Soon Please take capture for the order number that you can inquire about your order status later from the main screen"
+            android:text="@string/order_confirm_head"
             android:textColor="@color/colorPrimary" />
     </androidx.cardview.widget.CardView>
 
@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
-            android:text="TextView"
+            android:text=""
             android:textAlignment="center"
             android:textColor="@color/colorPrimary"
             android:textSize="20sp" />
@@ -69,7 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
-            android:text="Capture Screen"
+            android:text="@string/capture_screen"
             android:textAlignment="center"
             android:textColor="@color/colorPrimary"
             android:textSize="20sp" />

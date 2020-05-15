@@ -43,7 +43,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-medium"
-                        android:text="Free\nToll"
+                        android:text="@string/free_toll"
                         android:textColor="@color/common_google_signin_btn_text_dark_default"
                         android:textSize="24sp" />
 
@@ -62,7 +62,7 @@
                         android:drawableStart="@drawable/ic_phone_in_talk_white_24dp"
                         android:drawablePadding="8dp"
                         android:fontFamily="sans-serif-medium"
-                        android:text="92000000000"
+                        android:text="@string/_92000000000"
                         android:textColor="@color/common_google_signin_btn_text_dark_default"
                         android:textIsSelectable="true" />
                 </LinearLayout>
@@ -90,7 +90,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-medium"
-                        android:text="Company Name\nLicence No:12312312 \nwww.xxxx.com "
+                        android:text="@string/company_name_nlicence_no_12312312_nwww_xxxx_com"
                         android:textColor="@color/common_google_signin_btn_text_dark_default"
                         android:textSize="14sp" />
 
@@ -137,7 +137,7 @@
                         android:drawableEnd="@drawable/ic_date_range_white_24dp"
                         android:drawablePadding="8dp"
                         android:fontFamily="sans-serif-medium"
-                        android:text="May 24, 2015 "
+                        android:text="@string/date_placeholder"
                         android:textColor="@color/common_google_signin_btn_text_dark_default"
                         android:textIsSelectable="true" />
                 </LinearLayout>
@@ -185,7 +185,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-black"
-                        android:text="Fast Fix Application "
+                        android:text="@string/fast_fix_application"
                         android:textColor="@color/common_google_signin_btn_text_dark_default"
                         android:textSize="14sp" />
 
@@ -194,14 +194,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Saudi Arabia"
+                        android:text="@string/saudi_arabia"
                         android:textColor="@color/common_google_signin_btn_text_dark_default" />
 
                     <TextView
                         android:id="@+id/textView13"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="24/7 Support  "
+                        android:text="@string/_24_7_support"
                         android:textColor="@color/common_google_signin_btn_text_dark_default"
                         android:textSize="12sp" />
 
@@ -210,14 +210,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Whatsup"
+                        android:text="@string/whatsapp"
                         android:textColor="@color/common_google_signin_btn_text_dark_default" />
 
                     <TextView
                         android:id="@+id/textView15"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="9665443322112"
+                        android:text="@string/_9665443322112"
                         android:textColor="@color/common_google_signin_btn_text_dark_default"
                         android:textIsSelectable="true" />
 

@@ -7,16 +7,21 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -32,6 +37,8 @@ import com.servicing.jobaer.fastfixclient.model.AppData;
 import com.servicing.jobaer.fastfixclient.model.ServicesModel;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -126,9 +133,18 @@ public class CreateRequestActivity extends AppCompatActivity {
         String nameText=name.getText().toString();
         String mobile=phoneNumber.getText().toString();
         String description=descriptionText.getText().toString();
-        if (nameText.isEmpty() && mobile.isEmpty() && description.isEmpty() && selectedSpinner==-1)
+        if (nameText.isEmpty())
         {
-            Toast.makeText(this, "Please Fill All Required Info", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.enter_name), Toast.LENGTH_SHORT).show();
+        }
+        else if (mobile.isEmpty()) {
+            Toast.makeText(this,  getString(R.string.enter_mobile), Toast.LENGTH_SHORT).show();
+        }
+        else if (description.isEmpty()) {
+            Toast.makeText(this, getString(R.string.enter_desc), Toast.LENGTH_SHORT).show();
+        }
+        else if (selectedSpinner==-1) {
+            Toast.makeText(this, getString(R.string.select_category), Toast.LENGTH_SHORT).show();
         }
         else {
             String spinerItem=servicesModels.get(selectedSpinner).getId();
@@ -193,7 +209,8 @@ public class CreateRequestActivity extends AppCompatActivity {
 
         Log.d("CodePicked",requestCode+"");
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
+        intent.setType("*/*");
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] {"image/*", "video/*"});
         startActivityForResult(intent, requestCode);
     }
 
@@ -206,33 +223,126 @@ public class CreateRequestActivity extends AppCompatActivity {
                 return;
             }
             Uri uri = data.getData();
-            Log.d("requestCode",requestCode+"");
-            try {
-                Bitmap  bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+            String fileType=getMimeType(uri);
+            String[] splitedType = fileType.split("/", 2);
+            Log.d("SplitedType",splitedType[0]+ " "+splitedType[1]);
+            if (fileType.contains("image"))
+            {
+                try {
+                    Bitmap  bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                    if (requestCode==1) {
+                        image1.setImageBitmap(bitmap);
+                        storeImage(uri,0,splitedType[1]);
+                        image2.setVisibility(View.VISIBLE);
+                    }
+                    else if (requestCode==2) {
+                        image2.setImageBitmap(bitmap);
+                        storeImage(uri,1,splitedType[1]);
+                        image3.setVisibility(View.VISIBLE);
+                    }
+                    else if (requestCode==3) {
+                        image3.setImageBitmap(bitmap);
+                        storeImage(uri,2,splitedType[1]);
+                        image4.setVisibility(View.VISIBLE);
+                    }
+                    else if (requestCode==4) {
+                        image4.setImageBitmap(bitmap);
+                        storeImage(uri,3,splitedType[1]);
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else if (fileType.contains("video")){
                 if (requestCode==1) {
-                    image1.setImageBitmap(bitmap);
-                    storeImage(uri,0);
+                    image1.setImageDrawable(getDrawable(R.drawable.ic_videocam_black_24dp));
+                    storeVideo(uri,0,splitedType[1]);
                 }
                 else if (requestCode==2) {
-                    image2.setImageBitmap(bitmap);
-                    storeImage(uri,1);
+                    image2.setImageDrawable(getDrawable(R.drawable.ic_videocam_black_24dp));
+                    storeVideo(uri,1,splitedType[1]);
                 }
                 else if (requestCode==3) {
-                    image3.setImageBitmap(bitmap);
-                    storeImage(uri,2);
+                    image3.setImageDrawable(getDrawable(R.drawable.ic_videocam_black_24dp));
+                    storeVideo(uri,2,splitedType[1]);
                 }
                 else if (requestCode==4) {
-                    image4.setImageBitmap(bitmap);
-                    storeImage(uri,3);
+                    image4.setImageDrawable(getDrawable(R.drawable.ic_videocam_black_24dp));
+                    storeVideo(uri,3,splitedType[1]);
                 }
-
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+
 
         }
 
 
+    }
+
+    private void storeVideo(Uri uri, int i, String s) {
+        Cursor returnCursor =
+                getContentResolver().query(uri, null, null, null, null);
+        int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
+        returnCursor.moveToFirst();
+        long sizeOfVideo=returnCursor.getLong(sizeIndex);
+        int sizeInMb=(int) sizeOfVideo/1000000;
+        Log.d("videoSize",sizeInMb+"MB");
+        if (sizeInMb<5) {
+
+            String encodedVideo="data:image/"+s+";base64,"+encodeVideo(uri);
+            imagesBase64.add(i,encodedVideo);
+        }
+        else {
+            Toast.makeText(this,getString( R.string.max_3mb), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private String encodeVideo(Uri uri) {
+        //Uri selectedVideoUri =uri;
+       // String[] projection = {MediaStore.Video.Media.DATA, MediaStore.Video.Media.SIZE, MediaStore.Video.Media.DURATION};
+        //Cursor cursor = getContentResolver().query(selectedVideoUri, projection, null, null, null);
+
+        //cursor.moveToFirst();
+        //String filePath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+//        Log.d("File Name:",filePath);
+
+//        Bitmap thumb = ThumbnailUtils.createVideoThumbnail(filePath, MediaStore.Video.Thumbnails.MINI_KIND);
+        // Setting the thumbnail of the video in to the image view
+       // msImage.setImageBitmap(thumb);
+        InputStream inputStream = null;
+// Converting the video in to the bytes
+        try
+        {
+            inputStream = getContentResolver().openInputStream(uri);
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        int bufferSize = 1024;
+        byte[] buffer = new byte[bufferSize];
+        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+        int len = 0;
+        try
+        {
+            while ((len = inputStream.read(buffer)) != -1)
+            {
+                byteBuffer.write(buffer, 0, len);
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        System.out.println("converted!");
+
+        String videoData="";
+        //Converting bytes into base64
+        videoData = Base64.encodeToString(byteBuffer.toByteArray(), Base64.DEFAULT);
+        Log.d("VideoData**>  " , videoData);
+
+       return videoData;
     }
 
     @Override
@@ -245,33 +355,61 @@ public class CreateRequestActivity extends AppCompatActivity {
                 // permission was granted, yay! Do the
                 // contacts-related task you need to do.
             } else {
-                Toast.makeText(this, "Allow Permission To Get Image From Your Storage", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.storage_permision), Toast.LENGTH_SHORT).show();
                 // permission denied, boo! Disable the
                 // functionality that depends on this permission.
             }
         }
 
     }
-    private void storeImage(Uri uri,int index) {
+    private void storeImage(Uri uri,int index,String type) {
         try {
             // get uri from Intent
             // get bitmap from uri
             final InputStream imageStream = getContentResolver().openInputStream(uri);
             final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-            String encodedImage = "data:image/jpg;base64," + encodeImage(selectedImage);
-            imagesBase64.add(index,encodedImage);
-
+            String encodedImage=null;
+            if (type.equals("jpeg")) {
+                encodedImage = "data:image/jpeg;base64," + encodeJpgImage(selectedImage);
+            }
+            else if (type.equals("png")) {
+                encodedImage = "data:image/png;base64," + encodepngImage(selectedImage);
+            }
+            if (encodedImage!=null) {
+                imagesBase64.add(index, encodedImage);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private String encodeImage(Bitmap bm) {
+    private String encodeJpgImage(Bitmap bm) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] b = baos.toByteArray();
         String encImage = Base64.encodeToString(b, Base64.DEFAULT);
         return encImage;
     }
+    private String encodepngImage(Bitmap bm) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String encImage = Base64.encodeToString(b, Base64.DEFAULT);
+        return encImage;
+    }
+    public String getMimeType(Uri uri) {
+        String mimeType = null;
+        if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
+            ContentResolver cr = getContentResolver();
+            mimeType = cr.getType(uri);
+        } else {
+            String fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri
+                    .toString());
+            mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
+                    fileExtension.toLowerCase());
+        }
+        return mimeType;
+    }
+
 
 }

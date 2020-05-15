@@ -34,7 +34,7 @@
             android:layout_marginBottom="12dp"
             android:background="@color/colorPrimary"
             android:fontFamily="sans-serif-black"
-            android:hint="Enter Your Name Here"
+            android:hint="@string/enter_your_name_here"
             android:textColor="@color/design_default_color_background"
             android:textColorHint="#80FFFFFF"
             android:textSize="18sp" />
@@ -56,7 +56,7 @@
             android:layout_marginTop="4dp"
             android:background="@color/colorPrimary"
             android:drawablePadding="16dp"
-            android:hint="Enter Phone Number"
+            android:hint="@string/enter_phone_number"
             android:inputType="phone"
             android:textColor="@color/design_default_color_background"
             android:textColorHint="#80FFFFFF"
@@ -70,8 +70,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
-        android:text="Category"
+        android:text="@string/category"
         android:textColor="@color/colorPrimary"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
@@ -90,8 +91,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Description"
+        android:text="@string/description"
         android:textColor="@color/colorPrimary"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/categorySpinner"
         app:layout_constraintTop_toBottomOf="@+id/categorySpinner" />
 
@@ -101,18 +103,18 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
-        android:hint="Enter Your Description"
+        android:hint="@string/enter_your_description"
         android:lines="5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/textView5"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/attachmentText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Attachment"
+        android:text="@string/attachment"
         android:textColor="@color/colorPrimary"
         app:layout_constraintStart_toStartOf="@+id/descriptionText"
         app:layout_constraintTop_toBottomOf="@+id/descriptionText" />
@@ -128,7 +130,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7">
+        app:layout_constraintTop_toBottomOf="@+id/attachmentText">
 
         <ImageView
             android:id="@+id/image1"
@@ -144,6 +146,7 @@
             android:layout_height="100dp"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
+            android:visibility="invisible"
             app:srcCompat="@drawable/ic_file_upload_primary_24dp" />
 
         <ImageView
@@ -152,6 +155,7 @@
             android:layout_height="100dp"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
+            android:visibility="invisible"
             app:srcCompat="@drawable/ic_file_upload_primary_24dp" />
 
         <ImageView
@@ -159,6 +163,7 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_weight="1"
+            android:visibility="invisible"
             app:srcCompat="@drawable/ic_file_upload_primary_24dp" />
     </LinearLayout>
 
@@ -169,7 +174,7 @@
         android:background="@color/colorPrimary"
         android:drawableEnd="@drawable/ic_arrow_forward_white_24dp"
         android:fontFamily="sans-serif-black"
-        android:text="Next"
+        android:text="@string/next"
         android:textAllCaps="false"
         android:textColor="@color/design_default_color_background"
         app:layout_constraintBottom_toBottomOf="parent"

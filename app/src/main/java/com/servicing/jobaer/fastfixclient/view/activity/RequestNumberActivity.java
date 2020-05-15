@@ -72,7 +72,7 @@ public class RequestNumberActivity extends AppCompatActivity {
             FileOutputStream fos = new FileOutputStream(pictureFile);
             image.compress(Bitmap.CompressFormat.PNG, 90, fos);
             fos.close();
-            Toast.makeText(this, "Saved To Your Gallery!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.saved_to_your_gallery), Toast.LENGTH_SHORT).show();
         } catch (FileNotFoundException e) {
             Log.d("pictureError", "File not found: " + e.getMessage());
         } catch (IOException e) {

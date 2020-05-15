@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -42,11 +43,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ViewRequestActivity extends AppCompatActivity {
-    TextView phoneNumber, name, addressView, status, codeView, dateView, categoryName, descriptionText;
+    TextView phoneNumber, name, addressView, status, codeView, dateView, categoryName, descriptionText,attachmentText,invoicesText;
     LinearLayout imageLayout;
-    ImageView image1, image2, image3, image4;
+    ImageView image1, image2, image3, image4,invoiceImage;
     Button closeButton;
     String id;
+    Button reminderButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +57,9 @@ public class ViewRequestActivity extends AppCompatActivity {
     }
     private void initUi() {
         phoneNumber = findViewById(R.id.phoneNumber);
+        attachmentText = findViewById(R.id.attachmentText);
+        invoiceImage = findViewById(R.id.invoiceImage);
+        invoicesText = findViewById(R.id.invoicesText);
         image2 = findViewById(R.id.image2);
         image3 = findViewById(R.id.image3);
         image4 = findViewById(R.id.image4);
@@ -69,6 +74,8 @@ public class ViewRequestActivity extends AppCompatActivity {
         categoryName = findViewById(R.id.categoryName);
         descriptionText = findViewById(R.id.descriptionText);
         id = getIntent().getStringExtra("id");
+        reminderButton=findViewById(R.id.reminderButton);
+
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,24 +87,30 @@ public class ViewRequestActivity extends AppCompatActivity {
     }
 
     private void closeRequest(String id, CloseRequestBody closeRequestBody) {
+        ProgressDialog progressDialog=new ProgressDialog(ViewRequestActivity.this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage(getString(R.string.cancel_request));
+        progressDialog.show();
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<ResponseModel> call = apiInterface.closeOrder(id, closeRequestBody);
         call.enqueue(new Callback<ResponseModel>() {
             @Override
             public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                progressDialog.dismiss();
                 ResponseModel responseModel = response.body();
                 if (responseModel != null) {
                     Log.d("closingStatus", responseModel.getStatus());
                     if (responseModel.getStatus().equals("Closed")) {
-                        Toast.makeText(ViewRequestActivity.this, "Request Closed Successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ViewRequestActivity.this, getString(R.string.request_closed), Toast.LENGTH_SHORT).show();
                         status.setText(responseModel.getStatus());
-
+                        closeButton.setVisibility(View.GONE);
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseModel> call, Throwable t) {
+                progressDialog.dismiss();
                 Toast.makeText(ViewRequestActivity.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -111,6 +124,36 @@ public class ViewRequestActivity extends AppCompatActivity {
             public void onResponse(Call<RequestModel> call, Response<RequestModel> response) {
                 RequestModel requestModel = response.body();
                 if (requestModel != null) {
+                    reminderButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            sendEmail(requestModel);
+                        }
+                    });
+                    if (requestModel.getStatus().equals("Closed")) {
+                        closeButton.setVisibility(View.GONE);
+                    }
+                    if (requestModel.getInvoice()!=null)
+                    {
+                        Picasso.get().load(requestModel.getInvoice()).into(invoiceImage);
+                        invoiceImage.setVisibility(View.VISIBLE);
+                        invoiceImage.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                ArrayList<String> images=new ArrayList<>();
+                                images.add(requestModel.getInvoice());
+                                new StfalconImageViewer.Builder<>(ViewRequestActivity.this, images, new ImageLoader<String>() {
+                                    @Override
+                                    public void loadImage(ImageView imageView, String image) {
+                                        Picasso.get().load(image).into(imageView);
+                                    }
+                                }).withStartPosition(0).show();
+                            }
+                        });
+                    }
+                    else {
+                        invoicesText.setText(getString(R.string.no_invoice));
+                    }
                     name.setText(requestModel.getName());
                     phoneNumber.setText(requestModel.getPhone());
                     addressView.setText(requestModel.getAddres());
@@ -266,6 +309,8 @@ public class ViewRequestActivity extends AppCompatActivity {
                         });
                     } else if (requestModel.getMedia().size() == 0) {
                         imageLayout.setVisibility(View.GONE);
+                        attachmentText.setText(getString(R.string.no_attachment));
+
                     }
 
                     phoneNumber.setOnClickListener(new View.OnClickListener() {
@@ -349,11 +394,32 @@ public class ViewRequestActivity extends AppCompatActivity {
                 // permission was granted, yay! Do the
                 // contacts-related task you need to do.
             } else {
-                Toast.makeText(this, "Allow Permission To Get Image From Your Storage", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.storage_permision), Toast.LENGTH_SHORT).show();
                 // permission denied, boo! Disable the
                 // functionality that depends on this permission.
             }
         }
 
+    }
+    protected void sendEmail(RequestModel requestModel) {
+        Log.i("Send email", "");
+
+        String[] TO = {"bilaljmal@gmail.com"};
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.setType("text/plain");
+
+
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Reminder For A Request");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, requestModel.getName()+"\n"+requestModel.getPhone()+"\n"+requestModel.getAddres());
+
+        try {
+            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+            Log.i("Finished", "");
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(ViewRequestActivity.this,
+                    "There is no email client installed.", Toast.LENGTH_SHORT).show();
+        }
     }
 }

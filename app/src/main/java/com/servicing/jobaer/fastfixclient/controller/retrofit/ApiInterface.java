@@ -1,5 +1,6 @@
 package com.servicing.jobaer.fastfixclient.controller.retrofit;
 
+import com.servicing.jobaer.fastfixclient.model.MessageModel;
 import com.servicing.jobaer.fastfixclient.model.RequestGenaratedModel;
 import com.servicing.jobaer.fastfixclient.model.ResponseModel;
 import com.servicing.jobaer.fastfixclient.model.SearchResponseModel;
@@ -41,4 +42,8 @@ public interface ApiInterface {
 
     @POST("create/")
     Call<RequestGenaratedModel> createRequest(@Body CreateRequestBody createRequestBody);
+
+    @GET("message/")
+    Call<ArrayList<MessageModel>> getMessage();
+
 }

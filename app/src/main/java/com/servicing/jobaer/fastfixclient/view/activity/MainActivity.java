@@ -6,12 +6,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,31 +77,35 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+        searchText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                searchText.setFocusableInTouchMode(true);
+
+                return false;
+            }
+        });
         searchRecycler = findViewById(R.id.searchRecycler);
         requestListAdapter = new RequestListAdapter(this, requestModels);
         searchRecycler.setLayoutManager(new LinearLayoutManager(this));
         searchRecycler.setAdapter(requestListAdapter);
-        searchText.addTextChangedListener(new TextWatcher() {
+        ImageView searchButton=findViewById(R.id.searchButton);
+        searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s.toString().isEmpty()) {
+            public void onClick(View v) {
+                hideKeyboard(MainActivity.this);
+                searchText.setFocusable(false);
+                String text=searchText.getText().toString();
+                if (text.isEmpty()) {
                     hideSearch();
                     showCards();
                 } else {
-                    getSearchResult(s.toString());
+                    getSearchResult(text);
                 }
             }
         });
+
         closeSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,12 +116,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     private void getSearchResult(String q) {
+        ProgressDialog progressDialog=new ProgressDialog(MainActivity.this);
+        progressDialog.setCancelable(true);
+        progressDialog.setMessage(getString(R.string.searching));
+        progressDialog.show();
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<SearchResponseModel> call = apiInterface.getSearchResult(q);
         call.enqueue(new Callback<SearchResponseModel>() {
             @Override
             public void onResponse(Call<SearchResponseModel> call, Response<SearchResponseModel> response) {
-
+                progressDialog.dismiss();
                 SearchResponseModel searchResponseModel = response.body();
                 if (searchResponseModel != null) {
                     requestModels.clear();
@@ -124,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         hideSearch();
                         showCards();
-                        Toast.makeText(MainActivity.this, "Nothing Found!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, getString(R.string.nothing_found), Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -132,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<SearchResponseModel> call, Throwable t) {
+                progressDialog.dismiss();
                 showCards();
                 hideSearch();
                 Toast.makeText(MainActivity.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
@@ -155,5 +169,15 @@ public class MainActivity extends AppCompatActivity {
     private void hideSearch() {
         searchRecycler.setVisibility(View.GONE);
         closeSearch.setVisibility(View.GONE);
+    }
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }
