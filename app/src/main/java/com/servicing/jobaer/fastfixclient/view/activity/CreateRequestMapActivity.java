@@ -2,6 +2,7 @@ package com.servicing.jobaer.fastfixclient.view.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
@@ -59,6 +60,7 @@ public class CreateRequestMapActivity extends AppCompatActivity implements OnMap
     String name,mobile,description,service_type;
     private boolean locationSelected=false;
     private ArrayList<ImageModel> imageModels=new ArrayList<>();
+    CardView currentLocation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,7 +127,34 @@ public class CreateRequestMapActivity extends AppCompatActivity implements OnMap
                 }
             });
         }
+        currentLocation = findViewById(R.id.currentLocation);
+        currentLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ActivityCompat.checkSelfPermission(CreateRequestMapActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(CreateRequestMapActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(CreateRequestMapActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                            1);
+                    Log.d("CreateMap", "Permission Required");
+                } else {
+                    Log.d("CreateMap", "Permission Done");
+                    // already permission granted
+                    mFusedLocationClient.getLastLocation().addOnSuccessListener(CreateRequestMapActivity.this, location -> {
+                        if (location != null) {
+                            Log.d("myLocation", location.getLatitude() + " " + location.getLongitude());
+                            lat = location.getLatitude();
+                            lon = location.getLongitude();
+                            if (mMap != null) {
+                                LatLng currentLocation = new LatLng(lat, lon);
+                                addMarker(currentLocation);
+                            }
+                        }
+                    });
+                }
+            }
+        });
         Button createRequest=findViewById(R.id.creaateRequest);
+
         createRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
