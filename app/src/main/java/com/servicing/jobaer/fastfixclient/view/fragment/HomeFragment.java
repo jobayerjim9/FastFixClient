@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.servicing.jobaer.fastfixclient.R;
@@ -19,6 +20,11 @@ import com.servicing.jobaer.fastfixclient.controller.retrofit.ApiClient;
 import com.servicing.jobaer.fastfixclient.controller.retrofit.ApiInterface;
 import com.servicing.jobaer.fastfixclient.model.MessageModel;
 import com.servicing.jobaer.fastfixclient.view.activity.CreateRequestActivity;
+import com.servicing.jobaer.fastfixclient.view.activity.TermsActivity;
+import com.servicing.jobaer.fastfixclient.view.activity.ViewRequestActivity;
+import com.squareup.picasso.Picasso;
+import com.stfalcon.imageviewer.StfalconImageViewer;
+import com.stfalcon.imageviewer.loader.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -30,7 +36,7 @@ import retrofit2.Response;
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment {
-    TextView messageView;
+    ImageView messageView;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -53,13 +59,11 @@ public class HomeFragment extends Fragment {
         sosButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(Intent.ACTION_DIAL);
-                String p = "tel:" + "03228637307";
-                i.setData(Uri.parse(p));
-                startActivity(i);
+                startActivity(new Intent(getContext(), TermsActivity.class));
             }
         });
-
+        http:
+//157.245.181.14:8030/media/Bilal%20jmal%20is%20working%20perfect
         getMessage();
         return v;
 
@@ -73,8 +77,21 @@ public class HomeFragment extends Fragment {
             public void onResponse(Call<ArrayList<MessageModel>> call, Response<ArrayList<MessageModel>> response) {
                 ArrayList<MessageModel> messageModel=response.body();
                 if (messageModel!=null) {
-
-                    messageView.setText(messageModel.get(0).getBody());
+                    Picasso.get().load(messageModel.get(0).getBody()).into(messageView);
+                    //essageView.setText(messageModel.get(0).getBody());
+                    messageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ArrayList<String> images = new ArrayList<>();
+                            images.add(messageModel.get(0).getBody());
+                            new StfalconImageViewer.Builder<>(getContext(), images, new ImageLoader<String>() {
+                                @Override
+                                public void loadImage(ImageView imageView, String image) {
+                                    Picasso.get().load(image).into(imageView);
+                                }
+                            }).withStartPosition(0).show();
+                        }
+                    });
                 }
             }
 

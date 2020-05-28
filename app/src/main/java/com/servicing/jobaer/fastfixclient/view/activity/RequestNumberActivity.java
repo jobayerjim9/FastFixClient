@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,10 +42,16 @@ public class RequestNumberActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(RequestNumberActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
         String code=getIntent().getStringExtra("code");
-        String placeHolder="Request No: "+code;
+        String placeHolder = "رقم الطلب : " + code;
         TextView ref=findViewById(R.id.refNo);
         ref.setText(placeHolder);
-
+        Button finishButton = findViewById(R.id.finishButton);
+        finishButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         CardView captureScreenCard=findViewById(R.id.captureScreenCard);
         captureScreenCard.setOnClickListener(new View.OnClickListener() {
             @Override

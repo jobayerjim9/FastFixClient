@@ -7,7 +7,10 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -37,6 +40,7 @@ import com.servicing.jobaer.fastfixclient.model.AppData;
 import com.servicing.jobaer.fastfixclient.model.ServicesModel;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -51,9 +55,11 @@ public class CreateRequestActivity extends AppCompatActivity {
     Spinner spinner;
     private ArrayList<ServicesModel> servicesModels=new ArrayList<>();
     private int selectedSpinner=-1;
+    Uri uri;
     private ImageView image1,image2,image3,image4;
     private ArrayList<String> imagesBase64=new ArrayList<>(4);
     private EditText name,phoneNumber,descriptionText;
+    final String[] permissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,47 +87,61 @@ public class CreateRequestActivity extends AppCompatActivity {
         image1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(CreateRequestActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                if (ContextCompat.checkSelfPermission(CreateRequestActivity.this, Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(CreateRequestActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(CreateRequestActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED) {
                     // Permission is not granted
-                    ActivityCompat.requestPermissions(CreateRequestActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                    ActivityCompat.requestPermissions(CreateRequestActivity.this, permissions, 1);
                 } else {
-                    pickImage(1);
+                    //pickImage(1);
+                    selectImage(1);
                 }
             }
         });
         image2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(CreateRequestActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                if (ContextCompat.checkSelfPermission(CreateRequestActivity.this, Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(CreateRequestActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(CreateRequestActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED) {
                     // Permission is not granted
-                    ActivityCompat.requestPermissions(CreateRequestActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                    ActivityCompat.requestPermissions(CreateRequestActivity.this, permissions, 1);
                 } else {
-                    pickImage(2);
+                    // pickImage(2);
+                    selectImage(2);
+
                 }
             }
         });
         image3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(CreateRequestActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                if (ContextCompat.checkSelfPermission(CreateRequestActivity.this, Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(CreateRequestActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(CreateRequestActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED) {
                     // Permission is not granted
-                    ActivityCompat.requestPermissions(CreateRequestActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                    ActivityCompat.requestPermissions(CreateRequestActivity.this, permissions, 1);
                 } else {
-                    pickImage(3);
+                    //pickImage(3);
+                    selectImage(3);
                 }
             }
         });
         image4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(CreateRequestActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                if (ContextCompat.checkSelfPermission(CreateRequestActivity.this, Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(CreateRequestActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(CreateRequestActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(CreateRequestActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                    // Permission is not granted
+                    ActivityCompat.requestPermissions(CreateRequestActivity.this, permissions, 1);
                 } else {
-                    pickImage(4);
+                    //pickImage(4);
+                    selectImage(4);
                 }
             }
         });
@@ -205,6 +225,34 @@ public class CreateRequestActivity extends AppCompatActivity {
         });
     }
 
+    private void selectImage(int req) {
+        final CharSequence[] options = {"Take Photo", "Choose from Gallery", "Cancel"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(CreateRequestActivity.this);
+        builder.setTitle("Choose your profile picture");
+
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+
+                if (options[item].equals("Take Photo")) {
+                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                        startActivityForResult(takePictureIntent, req);
+                    }
+
+                } else if (options[item].equals("Choose from Gallery")) {
+                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(pickPhoto, req);
+
+                } else if (options[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
     public void pickImage(int requestCode) {
 
         Log.d("CodePicked",requestCode+"");
@@ -222,33 +270,80 @@ public class CreateRequestActivity extends AppCompatActivity {
                 //Display an error
                 return;
             }
+
+
             Uri uri = data.getData();
+
             String fileType=getMimeType(uri);
+            if (uri == null) {
+                Bundle extras = data.getExtras();
+                Bitmap imageBitmap = (Bitmap) extras.get("data");
+                uri = getImageUri(CreateRequestActivity.this, imageBitmap);
+
+            }
+            Log.d("imageUri", uri + "");
             String[] splitedType = fileType.split("/", 2);
-            Log.d("SplitedType",splitedType[0]+ " "+splitedType[1]);
+            //Log.d("SplitedType",splitedType[0]+ " "+splitedType[1]);
+            Log.d("splittedType", splitedType + "");
             if (fileType.contains("image"))
             {
                 try {
-                    Bitmap  bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-                    if (requestCode==1) {
-                        image1.setImageBitmap(bitmap);
-                        storeImage(uri,0,splitedType[1]);
-                        image2.setVisibility(View.VISIBLE);
+                    Cursor returnCursor =
+                            getContentResolver().query(uri, null, null, null, null);
+                    int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
+                    returnCursor.moveToFirst();
+                    long sizeOfVideo = returnCursor.getLong(sizeIndex);
+                    int sizeInMb = (int) sizeOfVideo / 1000000;
+                    Log.d("imageSize", sizeInMb + "");
+                    if (sizeInMb < 3) {
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                        if (requestCode == 1) {
+                            if (splitedType.length == 1) {
+                                image1.setImageBitmap(bitmap);
+                                storeImage(uri, 0, "jpg");
+                                image2.setVisibility(View.VISIBLE);
+                            } else {
+                                image1.setImageBitmap(bitmap);
+                                storeImage(uri, 0, splitedType[1]);
+                                image2.setVisibility(View.VISIBLE);
+                            }
+
+                        } else if (requestCode == 2) {
+                            if (splitedType.length == 1) {
+                                image2.setImageBitmap(bitmap);
+                                storeImage(uri, 1, "jpg");
+                                image3.setVisibility(View.VISIBLE);
+                            } else {
+                                image2.setImageBitmap(bitmap);
+                                storeImage(uri, 1, splitedType[1]);
+                                image3.setVisibility(View.VISIBLE);
+                            }
+
+                        } else if (requestCode == 3) {
+                            if (splitedType.length == 1) {
+                                image3.setImageBitmap(bitmap);
+                                storeImage(uri, 2, "jpg");
+                                image4.setVisibility(View.VISIBLE);
+                            } else {
+                                image3.setImageBitmap(bitmap);
+                                storeImage(uri, 2, splitedType[1]);
+                                image4.setVisibility(View.VISIBLE);
+                            }
+
+                        } else if (requestCode == 4) {
+                            if (splitedType.length == 1) {
+                                image4.setImageBitmap(bitmap);
+                                storeImage(uri, 3, "jpg");
+                            } else {
+                                image4.setImageBitmap(bitmap);
+                                storeImage(uri, 3, splitedType[1]);
+                            }
+
+                        }
+                    } else {
+                        Toast.makeText(this, "Upload Image That Lower Than 2 mb", Toast.LENGTH_SHORT).show();
                     }
-                    else if (requestCode==2) {
-                        image2.setImageBitmap(bitmap);
-                        storeImage(uri,1,splitedType[1]);
-                        image3.setVisibility(View.VISIBLE);
-                    }
-                    else if (requestCode==3) {
-                        image3.setImageBitmap(bitmap);
-                        storeImage(uri,2,splitedType[1]);
-                        image4.setVisibility(View.VISIBLE);
-                    }
-                    else if (requestCode==4) {
-                        image4.setImageBitmap(bitmap);
-                        storeImage(uri,3,splitedType[1]);
-                    }
+
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -366,21 +461,26 @@ public class CreateRequestActivity extends AppCompatActivity {
         try {
             // get uri from Intent
             // get bitmap from uri
+
             final InputStream imageStream = getContentResolver().openInputStream(uri);
             final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-            String encodedImage=null;
-            if (type.equals("jpeg")) {
+            String encodedImage = null;
+            if (type.equals("jpeg") || type.equals("jpg")) {
                 encodedImage = "data:image/jpeg;base64," + encodeJpgImage(selectedImage);
-            }
-            else if (type.equals("png")) {
+            } else if (type.equals("png")) {
                 encodedImage = "data:image/png;base64," + encodepngImage(selectedImage);
             }
-            if (encodedImage!=null) {
-                imagesBase64.add(index, encodedImage);
+            if (encodedImage != null) {
+                try {
+                    imagesBase64.add(index, encodedImage);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    Toast.makeText(this, "Remove The Previous Image Because It's Larger Than 2 MB", Toast.LENGTH_SHORT).show();
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     private String encodeJpgImage(Bitmap bm) {
@@ -399,17 +499,28 @@ public class CreateRequestActivity extends AppCompatActivity {
     }
     public String getMimeType(Uri uri) {
         String mimeType = null;
-        if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
-            ContentResolver cr = getContentResolver();
-            mimeType = cr.getType(uri);
-        } else {
-            String fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri
-                    .toString());
-            mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
-                    fileExtension.toLowerCase());
+        try {
+
+
+            if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
+                ContentResolver cr = getContentResolver();
+                mimeType = cr.getType(uri);
+            } else {
+                String fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri
+                        .toString());
+                mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
+                        fileExtension.toLowerCase());
+            }
+            return mimeType;
+        } catch (Exception e) {
+            return "image";
         }
-        return mimeType;
     }
 
-
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
 }

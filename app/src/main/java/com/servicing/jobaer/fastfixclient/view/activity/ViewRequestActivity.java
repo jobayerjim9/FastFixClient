@@ -117,12 +117,17 @@ public class ViewRequestActivity extends AppCompatActivity {
     }
 
     private void getRequestDetails(String id) {
+        ProgressDialog progressDialog = new ProgressDialog(ViewRequestActivity.this);
+        progressDialog.setCancelable(true);
+        progressDialog.setMessage("Getting Information..!");
+        progressDialog.show();
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<RequestModel> call = apiInterface.getRequestDetail(id);
         call.enqueue(new Callback<RequestModel>() {
             @Override
             public void onResponse(Call<RequestModel> call, Response<RequestModel> response) {
                 RequestModel requestModel = response.body();
+                progressDialog.dismiss();
                 if (requestModel != null) {
                     reminderButton.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -132,6 +137,7 @@ public class ViewRequestActivity extends AppCompatActivity {
                     });
                     if (requestModel.getStatus().equals("Closed")) {
                         closeButton.setVisibility(View.GONE);
+                        reminderButton.setVisibility(View.GONE);
                     }
                     if (requestModel.getInvoice()!=null)
                     {
@@ -331,6 +337,7 @@ public class ViewRequestActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<RequestModel> call, Throwable t) {
                 Toast.makeText(ViewRequestActivity.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }
         });
 
