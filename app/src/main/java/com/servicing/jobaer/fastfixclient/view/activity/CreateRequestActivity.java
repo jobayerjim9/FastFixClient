@@ -445,14 +445,13 @@ public class CreateRequestActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1) {
             if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
                 Log.d("Permission", "Granted");
-                // permission was granted, yay! Do the
-                // contacts-related task you need to do.
+                selectImage(1);
+
             } else {
                 Toast.makeText(this, getString(R.string.storage_permision), Toast.LENGTH_SHORT).show();
-                // permission denied, boo! Disable the
-                // functionality that depends on this permission.
+                ActivityCompat.requestPermissions(CreateRequestActivity.this, this.permissions, 1);
             }
         }
 

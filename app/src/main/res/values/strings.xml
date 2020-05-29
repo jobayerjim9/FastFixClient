@@ -9,7 +9,7 @@
     <string name="address"><u>الاسم:</u></string>
     <string name="google_api">AIzaSyD9cXmVfYx8H9ulMictnIDJfR1L9SMdhvA</string>
     <string name="enter_your_name_here">أدخل اسمك هنا</string>
-    <string name="enter_phone_number">أدخل رقم الجوال هنا</string>
+    <string name="enter_phone_number"> 054444444 أدخل رقم الجوال هنا</string>
     <string name="enter_your_description">ماهو وصف مشكلتك</string>
     <string name="next">التالي</string>
     <string name="create_request">إنشاء الطلب</string>

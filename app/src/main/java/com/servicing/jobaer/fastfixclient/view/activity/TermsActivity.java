@@ -16,15 +16,20 @@ public class TermsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_terms);
+        int type = getIntent().getIntExtra("type", -1);
         CheckBox checkBox = findViewById(R.id.termsBox);
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    Intent i = new Intent(Intent.ACTION_DIAL);
-                    String p = "tel:" + "00966540805117";
-                    i.setData(Uri.parse(p));
-                    startActivity(i);
+                    if (type == 1) {
+                        Intent i = new Intent(Intent.ACTION_DIAL);
+                        String p = "tel:" + "00966540805117";
+                        i.setData(Uri.parse(p));
+                        startActivity(i);
+                    } else {
+                        startActivity(new Intent(TermsActivity.this, CreateRequestActivity.class));
+                    }
                     finish();
                 }
             }
