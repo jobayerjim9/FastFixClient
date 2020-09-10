@@ -211,13 +211,15 @@
 
     <Button
         android:id="@+id/nextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="16dp"
         android:background="@color/colorPrimary"
         android:drawableEnd="@drawable/ic_arrow_forward_white_24dp"
         android:fontFamily="sans-serif-black"
+        android:paddingEnd="8dp"
         android:text="@string/next"
         android:textAllCaps="false"
         android:textColor="@color/design_default_color_background"

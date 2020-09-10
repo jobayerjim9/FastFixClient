@@ -15,7 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
     public static final String BASE_URL = "http://157.245.181.14:8030/";
-    public static final String AUTH_TOKEN = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImJpbGFsam1hbCIsImV4cCI6MTYxMTY4MDIyMywiZW1haWwiOiJiaWxhbGptYWxAZ21haWwuY29tIiwib3JpZ19pYXQiOjE1ODkyMTYyMjN9.pf_lo72kbPDCtVEXRdnXQTGV4Hv1yweUqm32x323nng";
+    public static final String AUTH_TOKEN = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImJpbGFsam1hbCIsImV4cCI6MTYxODg1Mzk5NiwiZW1haWwiOiJiaWxhbGptYWxAZ21haWwuY29tIiwib3JpZ19pYXQiOjE1OTYzODk5OTZ9.HtQADJfnj8T9wSsdkGB0iWLgl_qcOf2L2qdEFvzQXoU";
     private static Retrofit retrofit = null;
 
 
@@ -36,9 +36,9 @@ public class ApiClient {
                     @Override
                     public okhttp3.Response intercept(Chain chain) throws IOException {
                         Request originalRequest = chain.request();
-                        Request.Builder builder = originalRequest.newBuilder().header("Authorization",
-                                AUTH_TOKEN);
-
+                        Request.Builder builder = originalRequest.newBuilder()
+                                .header("Authorization",
+                                        AUTH_TOKEN);
                         Request newRequest = builder.build();
                         return chain.proceed(newRequest);
                     }

@@ -189,6 +189,7 @@ public class CreateRequestMapActivity extends AppCompatActivity implements OnMap
                         Toast.makeText(CreateRequestMapActivity.this, getString(R.string.request_placed), Toast.LENGTH_SHORT).show();
 
                         startActivity(intent);
+                        setResult(RESULT_OK);
                         finish();
                         Log.d("genaratedCode", temp.getCode());
 

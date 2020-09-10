@@ -64,12 +64,14 @@ public class HomeFragment extends Fragment {
         // inflate the layout using the cloned inflater, not default inflater
         View v = localInflater.inflate(R.layout.fragment_home, container, false);
 
-        CardView creayeRequestCard=v.findViewById(R.id.creayeRequestCard);
+        CardView creayeRequestCard = v.findViewById(R.id.creayeRequestCard);
 
         carousel = v.findViewById(R.id.carousel);
 
         carousel.setAutoPlay(true);
         carousel.setShowNavigationButtons(false);
+        carousel.setBottomShadowAlpha(0);
+        carousel.setTopShadowAlpha(0);
         creayeRequestCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,7 +81,7 @@ public class HomeFragment extends Fragment {
 
             }
         });
-        Button sosButton=v.findViewById(R.id.sosButton);
+        Button sosButton = v.findViewById(R.id.sosButton);
         sosButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

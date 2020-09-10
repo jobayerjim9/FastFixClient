@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">الإصلاح السريع </string>
+    <string name="app_name">Fast Fix</string>
+    <string name="app_name_intro">الإصلاح السريع </string>
     <string name="menu_home">الرئيسيه</string>
     <string name="about_us">من نحن</string>
     <string name="contact_us">إتصل بنا</string>
@@ -15,7 +16,7 @@
     <string name="create_request">إنشاء الطلب</string>
     <string name="close_search">اغلاق البحث</string>
     <string name="search_by_telephone_request_number">بحث برقم الجوال او رقم الطلب</string>
-    <string name="order_confirm_head">شكرا لك. سيتم الاتصال ب باسرع وقت  الرجاء الاحتفاظ برقم الطبي و تصوير الشاشه لمتابعه حالة الطلب الخاص بك</string>
+    <string name="order_confirm_head">شكرا لك. سيتم الإتصال بك خلال 5 دقائق الرجاء الإحتفاظ برقم الطلب وتصوير الشاشة من خلال الضغط على (تصويرالشاشة) . </string>
     <string name="capture_screen">تصوير الشاشة</string>
     <string name="invoices">الفاتورة</string>
     <string name="category">نوع المشكلة</string>
@@ -35,10 +36,10 @@
     <string name="subject">الموضوع</string>
     <string name="name">االاسم</string>
     <string name="send">ارسال</string>
-    <string name="create_new_request">إانشاء طلب جديد</string>
+    <string name="create_new_request">إنشاء الطلب</string>
     <string name="fast_fix_application">Fast Fix Application</string>
     <string name="the_speed_fixing">The Speed Fixing</string>
-    <string name="sos">SOS</string>
+    <string name="sos">إتصال سريع</string>
     <string name="our_services">خدماتنا</string>
     <string name="enter_name">أدخل اسمك هنا</string>
     <string name="enter_mobile">أدخل رقم الجوال هنا</string>
@@ -53,20 +54,24 @@
     <string name="waiting_for_location">تحديد الموقع!</string>
     <string name="searching">يتم البحث.....!</string>
     <string name="nothing_found">لم يتم العثور!</string>
-    <string name="saved_to_your_gallery">تم حفظ الطلب في معرض الصور!</string>
+    <string name="saved_to_your_gallery">تم حفظ الطلب في معرض الصور</string>
     <string name="request_closed">تم إغلاق الطلب بنجاح</string>
     <string name="no_invoice">لايوجد فاتورة مرفقة!</string>
     <string name="no_attachment">لايوجد مرفقات!</string>
     <string name="cancel_request">جاري الإلغاء...!</string>
     <string name="view">عرض</string>
-    <string name="terms">الشروط و الاحكام\n
-•	تقديمك  للطلب هو بمثابة موافقه منك على تنفيذ الطلب ومسؤول عن البيانات التي يتم ادخالها\n
-•	يتم توفير ضمان للخدمات المقدمه بناءا على ما يتم الاتفاق به مع مزود الخدمه اقلها 3 اشهر من تاريخ تنفيذ الخدمه.\n
-•	الأسعار يتم تقييمها من قبل مزود الخدمه و هي غير ثابته و تشمل القيمة المضافة .\n
-•	 التطبيق غير مسؤول عن قطع الغيار التي يحتاجها العميل و هي على نفقته الخاصه بالكامل.\n
-•	يتم دفع المبلغ الذي تم الاتفاق عليه كاش  قبل اتمام الخدمه ان تم طلب ذلك من مقدم الخدمة.\n
-•	في حال تم الغاء الطلب سيتم ارجاع المبالغ التي تم دفعها في حال عدم تنفيذ الخدمة.\n
-•	اي مواد يتم شراءها سيتم دفعها من قبل العميل مباشره قبل البدء بالعمل لمقدم الخدمة.\n
-•	اذا كان وصف المشكلة غير الذي تم ادخاله في الطلب يتم الاتفاق على سعر جديد و خدمه جديده.\n
-</string>
+    <string name="terms">\nالشروط ولأحكام :
+\n•	لكشف ٦٠ ريال وفي حال تم الإصلاح يتم خصم قيمة الكشف من أجور الإصلاح .
+\n•	تقديمك للطلب هو بمثابة موافقه منك على تنفيذ الطلب ومسؤول عن البيانات التي يتم ادخالها.
+\n•	يتم توفير ضمان للخدمات المقدمة بناءا على ما يتم الإتفاق به مع مزود الخدمة اقلها شهر من تاريخ تنفيذ الخدمة.
+\n•	الأسعار يتم تقييمها من قبل مزود الخدمة وهي غير ثابتة وتشمل القيمة المضافة.
+\n•	التطبيق غير مسؤول عن قطع الغيار التي يحتاجها العميل وهي على نفقته الخاصة بالكامل.
+\n•	يتم دفع المبلغ المتفق عليه كاش قبل إتمام الخدمة ان تم طلب ذلك من مقدم الخدمة.
+\n•	اي مواد يتم شراءها سيتم دفعها من قبل العميل مباشرة قبل البدء بالعمل لمقدم الخدمة.
+\n•	إذا كان وصف المشكلة غير مطايق للبيانات المدخلة في الطلب يتم الإتفاق على سعر جديد وخدمة جديدة.
+\n•	في حال عدم ارتداء الفني للكمامات و القفازات الخدمة تقدم مجانا.
+\n•	الضمان ٣٠ يوم من تاريخ أصدار الفاتوره.
+    </string>
+    <string name="email_about"><u>Info@fastfixapp.com</u> الايميل:</string>
+    <string name="accept_terms">موافق على الشروط و الأحكام</string>
 </resources>

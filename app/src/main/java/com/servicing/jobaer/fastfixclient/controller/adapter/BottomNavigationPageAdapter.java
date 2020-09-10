@@ -15,7 +15,6 @@ public class BottomNavigationPageAdapter extends FragmentStatePagerAdapter {
 
     public BottomNavigationPageAdapter(@NonNull FragmentManager fm) {
         super(fm);
-
     }
 
     @NonNull

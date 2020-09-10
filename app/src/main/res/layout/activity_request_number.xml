@@ -84,7 +84,7 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="16dp"
             android:background="@color/colorPrimaryDark"
-            android:text="Finish"
+            android:text="الشاشة الرئيسي"
             android:textColor="@color/ic_launcher_background" />
 
     </LinearLayout>

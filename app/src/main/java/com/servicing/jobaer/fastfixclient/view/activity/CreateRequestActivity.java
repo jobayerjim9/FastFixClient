@@ -60,6 +60,7 @@ public class CreateRequestActivity extends AppCompatActivity {
     private ArrayList<String> imagesBase64=new ArrayList<>(4);
     private EditText name,phoneNumber,descriptionText;
     final String[] permissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -167,17 +168,16 @@ public class CreateRequestActivity extends AppCompatActivity {
             Toast.makeText(this, getString(R.string.select_category), Toast.LENGTH_SHORT).show();
         }
         else {
-            String spinerItem=servicesModels.get(selectedSpinner).getId();
-            Intent intent=new Intent(CreateRequestActivity.this,CreateRequestMapActivity.class);
-            intent.putExtra("name",nameText);
-            intent.putExtra("mobile",mobile);
-            intent.putExtra("description",description);
-            intent.putExtra("service_type",spinerItem);
+            String spinerItem = servicesModels.get(selectedSpinner).getId();
+            Intent intent = new Intent(CreateRequestActivity.this, CreateRequestMapActivity.class);
+            intent.putExtra("name", nameText);
+            intent.putExtra("mobile", mobile);
+            intent.putExtra("description", description);
+            intent.putExtra("service_type", spinerItem);
             AppData.setImagesBase64(imagesBase64);
             //intent.putStringArrayListExtra("images",imagesBase64);
-            startActivity(intent);
-            finish();
-
+            startActivityForResult(intent, 10);
+            // finish();
 
 
         }
@@ -265,7 +265,11 @@ public class CreateRequestActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
+        if (requestCode == 10) {
+            if (resultCode == RESULT_OK) {
+                finish();
+            }
+        } else if (resultCode == Activity.RESULT_OK) {
             if (data == null) {
                 //Display an error
                 return;
@@ -274,7 +278,7 @@ public class CreateRequestActivity extends AppCompatActivity {
 
             Uri uri = data.getData();
 
-            String fileType=getMimeType(uri);
+            String fileType = getMimeType(uri);
             if (uri == null) {
                 Bundle extras = data.getExtras();
                 Bitmap imageBitmap = (Bitmap) extras.get("data");
